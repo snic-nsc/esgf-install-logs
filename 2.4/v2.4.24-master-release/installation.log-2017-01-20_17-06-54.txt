@@ -1,0 +1,4 @@
+Script started on Fri 20 Jan 2017 05:07:04 PM CET
+Please be sure this host has a fully qualified hostname and reponds to "hostname --fqdn" command
+
+Script done on Fri 20 Jan 2017 05:07:05 PM CET
