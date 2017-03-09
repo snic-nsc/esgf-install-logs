@@ -1,0 +1,566 @@
+Script started on Thu 09 Mar 2017 07:30:26 PM CET
+Using the fastest mirror (http://esg-dn2.nsc.liu.se/esgf)
+node type set to: [ all ] (60) 
+
+[01;31m
+  EEEEEEEEEEEEEEEEEEEEEE   SSSSSSSSSSSSSSS         GGGGGGGGGGGGGFFFFFFFFFFFFFFFFFFFFFF
+  E::::::::::::::::::::E SS:::::::::::::::S     GGG::::::::::::GF::::::::::::::::::::F
+  E::::::::::::::::::::ES:::::SSSSSS::::::S   GG:::::::::::::::GF::::::::::::::::::::F
+  EE::::::EEEEEEEEE::::ES:::::S     SSSSSSS  G:::::GGGGGGGG::::GFF::::::FFFFFFFFF::::F
+    E:::::E       EEEEEES:::::S             G:::::G       GGGGGG  F:::::F       FFFFFF[0m
+[01;33m    E:::::E             S:::::S            G:::::G                F:::::F
+    E::::::EEEEEEEEEE    S::::SSSS         G:::::G                F::::::FFFFFFFFFF
+    E:::::::::::::::E     SS::::::SSSSS    G:::::G    GGGGGGGGGG  F:::::::::::::::F
+    E:::::::::::::::E       SSS::::::::SS  G:::::G    G::::::::G  F:::::::::::::::F
+    E::::::EEEEEEEEEE          SSSSSS::::S G:::::G    GGGGG::::G  F::::::FFFFFFFFFF[0m
+[01;32m    E:::::E                         S:::::SG:::::G        G::::G  F:::::F
+    E:::::E       EEEEEE            S:::::S G:::::G       G::::G  F:::::F
+  EE::::::EEEEEEEE:::::ESSSSSSS     S:::::S  G:::::GGGGGGGG::::GFF:::::::FF
+  E::::::::::::::::::::ES::::::SSSSSS:::::S   GG:::::::::::::::GF::::::::FF
+  E::::::::::::::::::::ES:::::::::::::::SS      GGG::::::GGG:::GF::::::::FF
+  EEEEEEEEEEEEEEEEEEEEEE SSSSSSSSSSSSSSS           GGGGGG   GGGGFFFFFFFFFFF.llnl.gov
+[0m
+Checking that you have root privs on esg-autoidx.demonet.local... [01;32m[OK][0m
+Checking requisites... 
+
+
+-----------------------------------
+ESGF Node Installation Program
+-----------------------------------
+
+
+
+     The goal of this script is to automate as many tasks as possible
+     regarding the installation, maintenance and use of the ESGF
+     software stack that is know as the "ESGF Node".  A software
+     stack is a collection of tools that work in concert to perform a
+     particular task or set of tasks that are semantically united. The
+     software stack is comprised of: Tomcat, Thredds, CDAT & CDMS,
+     PostgreSQL, MyProxy, and several ESGF.org custom software
+     applications running on a LINUX (RedHat/CentOS) operating system.
+
+     Through the installation process there are different accounts
+     that are created that facilitate the communication between the
+     software stack entities.  These credentials are internal to the
+     stack.  It is recommended that you use the defaults provided
+     throughout this installation.  The security impact with regards
+     to the visibility and accessibility of the constituent components
+     of the stack depends on other factors to be addressed by your
+     organization.
+
+     Please be sure that you have gotten your created an account on
+     your ESGF IDP Peer.
+
+     The primary IDP Peer for ESGF is pcmdi.llnl.gov
+     You may register for an account at PCMDI at the following URL:
+     http://pcmdi.llnl.gov/esgf-web-fe/createAccount
+
+     Note: Account creation is prerequisite for publication!
+
+     ESGF P2P Node:                                             ESGF P2P Node:
+      ---------                                                   ---------
+     |Tomcat   |                                                 |Tomcat   |
+     |-Node Mgr|   <================= P2P =================>     |-Node Mgr|
+     |-Thredds |                                                 |-Thredds |
+     |-ORP     |                                                 |-ORP     |
+     |---------|                                                 |---------|
+     |CDAT/CDMS|                                                 |CDAT/CDMS|
+     |---------|                                                 |---------|
+     |Postgres |                                                 |Postgres |
+     |---------|                                                 |---------|
+     | MyProxy |  <===(HTTPS)===> [ESGF Peer Node(s)]*           | MyProxy |
+     |---------|                                                 |---------|
+     | GridFTP |  <=============> [End User(s)]*                 | GridFTP |
+     >---------<                                                 >---------<
+     | CentOS  |                                                 | CentOS  |
+     |(Virtual)|                                                 |(Virtual)|
+     | Machine |                                                 | Machine |
+     |---------|                                                 |---------|
+      ---------                                                   ---------
+
+     (Visit http://esgf.llnl.gov , http://github.com/ESGF/esgf.github.io/wiki for more information)
+
+                                                                                    
+[01;31m
+  EEEEEEEEEEEEEEEEEEEEEE   SSSSSSSSSSSSSSS         GGGGGGGGGGGGGFFFFFFFFFFFFFFFFFFFFFF
+  E::::::::::::::::::::E SS:::::::::::::::S     GGG::::::::::::GF::::::::::::::::::::F
+  E::::::::::::::::::::ES:::::SSSSSS::::::S   GG:::::::::::::::GF::::::::::::::::::::F
+  EE::::::EEEEEEEEE::::ES:::::S     SSSSSSS  G:::::GGGGGGGG::::GFF::::::FFFFFFFFF::::F
+    E:::::E       EEEEEES:::::S             G:::::G       GGGGGG  F:::::F       FFFFFF[0m
+[01;33m    E:::::E             S:::::S            G:::::G                F:::::F
+    E::::::EEEEEEEEEE    S::::SSSS         G:::::G                F::::::FFFFFFFFFF
+    E:::::::::::::::E     SS::::::SSSSS    G:::::G    GGGGGGGGGG  F:::::::::::::::F
+    E:::::::::::::::E       SSS::::::::SS  G:::::G    G::::::::G  F:::::::::::::::F
+    E::::::EEEEEEEEEE          SSSSSS::::S G:::::G    GGGGG::::G  F::::::FFFFFFFFFF[0m
+[01;32m    E:::::E                         S:::::SG:::::G        G::::G  F:::::F
+    E:::::E       EEEEEE            S:::::S G:::::G       G::::G  F:::::F
+  EE::::::EEEEEEEE:::::ESSSSSSS     S:::::S  G:::::GGGGGGGG::::GFF:::::::FF
+  E::::::::::::::::::::ES::::::SSSSSS:::::S   GG:::::::::::::::GF::::::::FF
+  E::::::::::::::::::::ES:::::::::::::::SS      GGG::::::GGG:::GF::::::::FF
+  EEEEEEEEEEEEEEEEEEEEEE SSSSSSSSSSSSSSS           GGGGGG   GGGGFFFFFFFFFFF.org
+[0m
+     -ESGF.org 
+
+
+Configured host IP address does not match available IPs...
+Detected multiple IP addresses bound to this host...
+Please select the IP address to use for this installation
+        -------------------------------------------
+        [0] : 192.168.1.53
+        [1] : 10.1.1.24
+        -------------------------------------------
+selected address -> 192.168.1.53
+(data node type selected)
+(index node type selected)
+(idp node type selected)
+(compute node type selected)
+
+-------------------------------------------------------
+Welcome to the ESGF Node installation program! :-)
+
+
+
+Please enter the database connection string...
+ (form: postgresql://[username]@[host]:[port]/esgcet)
+entered: postgresql://dbsuper@localhost:5432/esgcet
+db publisher connection string = [postgresql://esgcet@localhost:5432/esgcet]
+-------------------------------------------------------
+
+
+
+*******************************
+Installing prerequisites
+*******************************
+
+Loaded plugins: fastestmirror, priorities
+Setting up Remove Process
+No Match for argument: rpmforge-release
+Loading mirror speeds from cached hostfile
+epel/metalink                                            |  24 kB     00:00     
+ * base: mirror.nsc.liu.se
+ * epel: mirror.nsc.liu.se
+ * extras: mirror.nsc.liu.se
+ * updates: mirror.nsc.liu.se
+base                                                     | 3.7 kB     00:00     
+epel                                                     | 4.3 kB     00:00     
+epel/primary_db                                          | 5.9 MB     00:00     
+esgf                                                     | 1.3 kB     00:00     
+extras                                                   | 3.4 kB     00:00     
+extras/primary_db                                        |  37 kB     00:00     
+updates                                                  | 3.4 kB     00:00     
+updates/primary_db                                       | 5.4 MB     00:00     
+No Packages marked for removal
+Loaded plugins: fastestmirror, priorities
+Setting up Install Process
+Loading mirror speeds from cached hostfile
+ * base: mirror.nsc.liu.se
+ * epel: mirror.nsc.liu.se
+ * extras: mirror.nsc.liu.se
+ * updates: mirror.nsc.liu.se
+Package epel-release-6-8.noarch already installed and latest version
+Nothing to do
+Loaded plugins: fastestmirror, priorities
+Setting up Install Process
+Loading mirror speeds from cached hostfile
+ * base: mirror.nsc.liu.se
+ * epel: mirror.nsc.liu.se
+ * extras: mirror.nsc.liu.se
+ * updates: mirror.nsc.liu.se
+Package yum-plugin-priorities-1.1.30-37.el6.noarch already installed and latest version
+Package sqlite-devel-3.6.20-1.el6_7.2.x86_64 already installed and latest version
+Package freetype-devel-2.3.11-17.el6.x86_64 already installed and latest version
+Package git-1.7.1-4.el6_7.1.x86_64 already installed and latest version
+Package libcurl-devel-7.19.7-52.el6.x86_64 already installed and latest version
+Package autoconf-2.63-5.1.el6.noarch already installed and latest version
+Package automake-1.11.1-4.el6.noarch already installed and latest version
+Package bison-2.4.1-5.el6.x86_64 already installed and latest version
+Package file-5.04-30.el6.x86_64 already installed and latest version
+Package flex-2.5.35-9.el6.x86_64 already installed and latest version
+Package gcc-4.4.7-17.el6.x86_64 already installed and latest version
+Package gcc-c++-4.4.7-17.el6.x86_64 already installed and latest version
+Package gettext-devel-0.17-18.el6.x86_64 already installed and latest version
+Package libtool-2.2.6-15.5.el6.x86_64 already installed and latest version
+Package uuid-devel-1.6.1-10.el6.x86_64 already installed and latest version
+Package libuuid-devel-2.17.2-12.24.el6_8.3.x86_64 already installed and latest version
+Package libxml2-2.7.6-21.el6_8.1.x86_64 already installed and latest version
+Package libxml2-devel-2.7.6-21.el6_8.1.x86_64 already installed and latest version
+Package libxslt-1.1.26-2.el6_3.1.x86_64 already installed and latest version
+Package libxslt-devel-1.1.26-2.el6_3.1.x86_64 already installed and latest version
+Package lsof-4.82-5.el6.x86_64 already installed and latest version
+Package 1:make-3.81-23.el6.x86_64 already installed and latest version
+Package openssl-devel-1.0.1e-48.el6_8.4.x86_64 already installed and latest version
+Package pam-devel-1.1.1-22.el6.x86_64 already installed and latest version
+Package pax-3.4-10.1.el6.x86_64 already installed and latest version
+Package readline-devel-6.0-4.el6.x86_64 already installed and latest version
+Package 1:tk-devel-8.5.7-5.el6.x86_64 already installed and latest version
+Package wget-1.12-8.el6.x86_64 already installed and latest version
+Package zlib-devel-1.2.3-29.el6.x86_64 already installed and latest version
+Package perl-Archive-Tar-1.58-141.el6_7.1.x86_64 already installed and latest version
+Package perl-XML-Parser-2.36-7.el6.x86_64 already installed and latest version
+Package libX11-devel-1.6.3-2.el6.x86_64 already installed and latest version
+Package libtool-ltdl-devel-2.2.6-15.5.el6.x86_64 already installed and latest version
+Package e2fsprogs-devel-1.41.12-22.el6.x86_64 already installed and latest version
+Package gcc-gfortran-4.4.7-17.el6.x86_64 already installed and latest version
+Package libicu-devel-4.2.1-14.el6.x86_64 already installed and latest version
+Package libgtextutils-devel-0.6-5.el6.x86_64 already installed and latest version
+Package httpd-2.2.15-56.el6.centos.3.x86_64 already installed and latest version
+Package httpd-devel-2.2.15-56.el6.centos.3.x86_64 already installed and latest version
+Package 1:mod_ssl-2.2.15-56.el6.centos.3.x86_64 already installed and latest version
+Package libjpeg-turbo-devel-1.2.1-3.el6_5.x86_64 already installed and latest version
+Package perl-ExtUtils-MakeMaker-6.55-141.el6_7.1.x86_64 already installed and latest version
+Package perl-ExtUtils-Embed-1.28-141.el6_7.1.x86_64 already installed and latest version
+Package perl-ExtUtils-MakeMaker-Coverage-0.05-8.el6.noarch already installed and latest version
+Package 1:perl-ExtUtils-CBuilder-0.27-141.el6_7.1.x86_64 already installed and latest version
+Package perl-ExtUtils-PkgConfig-1.12-3.el6.noarch already installed and latest version
+Package perl-ExtUtils-Config-0.007-2.el6.noarch already installed and latest version
+Package perl-ExtUtils-F77-1.16-5.el6.noarch already installed and latest version
+Package perl-ExtUtils-CChecker-0.04-1.el6.noarch already installed and latest version
+Package perl-ExtUtils-H2PM-0.08-2.el6.noarch already installed and latest version
+Package perl-ExtUtils-XSBuilder-0.28-6.el6.noarch already installed and latest version
+Package 1:perl-ExtUtils-ParseXS-2.2003.0-141.el6_7.1.x86_64 already installed and latest version
+Package perl-ExtUtils-InstallPaths-0.009-3.el6.noarch already installed and latest version
+Package perl-ExtUtils-AutoInstall-0.63-10.el6.noarch already installed and latest version
+Package perl-ExtUtils-Helpers-0.020-1.el6.noarch already installed and latest version
+Package perl-ExtUtils-Depends-0.302-1.el6.noarch already installed and latest version
+Nothing to do
+
+*******************************
+Setting up ESGF RPM repository
+*******************************
+
+Checking for java >= 1.8.0_112 and valid JAVA_HOME... 
+*******************************
+Setting up Java... 1.8.0_112
+*******************************
+
+/usr/local/src/esgf/workbench/esg ~/esgf-autodeploy
+Don't see java distribution dir /usr/local/jdk1.8.0_112
+Don't see java distribution file /usr/local/src/esgf/workbench/esg/jdk1.8.0_112-64.tar.gz either
+Downloading Java from http://esg-dn2.nsc.liu.se/esgf/dist/java/1.8.0_112/jdk1.8.0_112-64.tar.gz
+ Hmmm... Could not find local file jdk1.8.0_112-64.tar.gz
+Fetching file from http://esg-dn2.nsc.liu.se/esgf/dist/java/1.8.0_112/jdk1.8.0_112-64.tar.gz -to-> jdk1.8.0_112-64.tar.gz
+--2017-03-09 19:30:48--  http://esg-dn2.nsc.liu.se/esgf/dist/java/1.8.0_112/jdk1.8.0_112-64.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 183252077 (175M) [application/x-gzip]
+Saving to: `jdk1.8.0_112-64.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s               6% [=>                                     ] 11,513,248  54.8M/s              14% [====>                                  ] 26,304,112  62.6M/s              22% [=======>                               ] 40,623,840  64.5M/s              29% [==========>                            ] 53,168,856  63.3M/s              36% [=============>                         ] 66,579,240  63.4M/s              43% [================>                      ] 80,524,472  63.9M/s              51% [===================>                   ] 94,608,176  64.4M/s              58% [=====================>                 ] 106,363,040 63.3M/s              65% [========================>              ] 119,968,448 63.5M/s              72% [===========================>           ] 132,030,288 62.9M/s              79% [==============================>        ] 146,136,704 63.3M/s              87% [================================>      ] 159,655,232 63.4M/s              95% [====================================>  ] 174,520,856 63.9M/s              100%[======================================>] 183,252,077 64.1M/s   in 2.7s    
+
+2017-03-09 19:30:50 (64.1 MB/s) - `jdk1.8.0_112-64.tar.gz' saved [183252077/183252077]
+
+[VERIFIED]
+unpacking jdk1.8.0_112-64.tar.gz...
+java version "1.8.0_112"
+Java(TM) SE Runtime Environment (build 1.8.0_112-b15)
+Java HotSpot(TM) 64-Bit Server VM (build 25.112-b15, mixed mode)
+Checking for ant >= 1.9.1 
+*******************************
+Setting up Ant... 1.9.1
+*******************************
+
+Don't see ant distribution dir /usr/local/apache-ant-1.9.1
+Don't see ant distribution file /usr/local/src/esgf/workbench/esg/apache-ant-1.9.1-bin.tar.gz either
+Downloading Ant from http://archive.apache.org/dist/ant/binaries/apache-ant-1.9.1-bin.tar.gz
+--2017-03-09 19:30:54--  http://archive.apache.org/dist/ant/binaries/apache-ant-1.9.1-bin.tar.gz
+Resolving archive.apache.org... 163.172.17.199
+Connecting to archive.apache.org|163.172.17.199|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 5508934 (5.3M) [application/x-gzip]
+Saving to: `apache-ant-1.9.1-bin.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s               8% [==>                                    ] 460,162     2.10M/s              47% [=================>                     ] 2,628,274   6.08M/s              100%[======================================>] 5,508,934   10.9M/s   in 0.5s    
+
+2017-03-09 19:30:54 (10.9 MB/s) - `apache-ant-1.9.1-bin.tar.gz' saved [5508934/5508934]
+
+unpacking apache-ant-1.9.1-bin.tar.gz...
+Apache Ant(TM) version 1.9.1 compiled on May 15 2013
+Checking for postgresql >= 8.4.20 
+ WARNING: could not find a version from '/usr/bin/postgres'
+
+*****************************
+Setting PostgreSQL Server RPM
+*****************************
+
+Loaded plugins: fastestmirror, priorities
+Setting up Install Process
+Loading mirror speeds from cached hostfile
+ * base: mirror.nsc.liu.se
+ * epel: mirror.nsc.liu.se
+ * extras: mirror.nsc.liu.se
+ * updates: mirror.nsc.liu.se
+esgf                                                     | 1.3 kB     00:00     
+Resolving Dependencies
+--> Running transaction check
+---> Package postgresql.x86_64 0:8.4.20-6.el6 will be installed
+--> Processing Dependency: postgresql-libs(x86-64) = 8.4.20-6.el6 for package: postgresql-8.4.20-6.el6.x86_64
+--> Processing Dependency: libpq.so.5()(64bit) for package: postgresql-8.4.20-6.el6.x86_64
+---> Package postgresql-devel.x86_64 0:8.4.20-6.el6 will be installed
+---> Package postgresql-server.x86_64 0:8.4.20-6.el6 will be installed
+--> Running transaction check
+---> Package postgresql-libs.x86_64 0:8.4.20-6.el6 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package                  Arch          Version               Repository   Size
+================================================================================
+Installing:
+ postgresql               x86_64        8.4.20-6.el6          base        2.6 M
+ postgresql-devel         x86_64        8.4.20-6.el6          base        816 k
+ postgresql-server        x86_64        8.4.20-6.el6          base        3.4 M
+Installing for dependencies:
+ postgresql-libs          x86_64        8.4.20-6.el6          base        202 k
+
+Transaction Summary
+================================================================================
+Install       4 Package(s)
+
+Total download size: 7.0 M
+Installed size: 32 M
+Downloading Packages:
+(1/4): postgresql-8.4.20-6.el6.x86_64.rpm                | 2.6 MB     00:00     
+(2/4): postgresql-devel-8.4.20-6.el6.x86_64.rpm          | 816 kB     00:00     
+(3/4): postgresql-libs-8.4.20-6.el6.x86_64.rpm           | 202 kB     00:00     
+(4/4): postgresql-server-8.4.20-6.el6.x86_64.rpm         | 3.4 MB     00:00     
+--------------------------------------------------------------------------------
+Total                                            35 MB/s | 7.0 MB     00:00     
+Running rpm_check_debug
+error: rpmdbNextIterator: skipping h#    1063 Header V3 RSA/SHA1 Signature, key ID c105b9de: BAD
+ERROR with rpm_check_debug vs depsolve:
+/bin/sh is needed by postgresql-server-8.4.20-6.el6.x86_64
+/bin/sh is needed by postgresql-server-8.4.20-6.el6.x86_64
+/bin/sh is needed by postgresql-server-8.4.20-6.el6.x86_64
+/bin/sh is needed by postgresql-server-8.4.20-6.el6.x86_64
+/bin/sh is needed by postgresql-server-8.4.20-6.el6.x86_64
+/bin/sh is needed by postgresql-devel-8.4.20-6.el6.x86_64
+ You could try running: rpm -Va --nofiles --nodigest
+Your transaction was saved, rerun it with:
+ yum load-transaction /tmp/yum_save_tx-2017-03-09-19-31Yswnbz.yumtx
+[01;31m[FAIL][0m 
+        Could not install or update postgresql
+
+Checking for *UV* CDAT (Python+CDMS) 2.2.0  WARNING: Could not detect version of cdat; Check the version command: [/usr/local/uvcdat/2.2.0/bin/python -c "import cdat_info; print cdat_info.Version"] => value: []
+
+*******************************
+Setting up CDAT - (Python + CDMS)... 2.2.0
+*******************************
+
+Loaded plugins: fastestmirror, priorities
+Setting up Install Process
+Loading mirror speeds from cached hostfile
+ * base: mirror.nsc.liu.se
+ * epel: mirror.nsc.liu.se
+ * extras: mirror.nsc.liu.se
+ * updates: mirror.nsc.liu.se
+Resolving Dependencies
+--> Running transaction check
+---> Package uvcdat.x86_64 0:2.2.0-1 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package           Arch              Version              Repository       Size
+================================================================================
+Installing:
+ uvcdat            x86_64            2.2.0-1              esgf             46 M
+
+Transaction Summary
+================================================================================
+Install       1 Package(s)
+
+Total download size: 46 M
+Installed size: 166 M
+Downloading Packages:
+UVCDAT-2.2.0-Linux.rpm    43% [======-        ]  0.0 B/s |  20 MB     --:-- ETA UVCDAT-2.2.0-Linux.rpm    81% [============   ]  29 MB/s |  37 MB     00:00 ETA UVCDAT-2.2.0-Linux.rpm                                   |  46 MB     00:00     
+Running rpm_check_debug
+error: rpmdbNextIterator: skipping h#    1063 Header V3 RSA/SHA1 Signature, key ID c105b9de: BAD
+error: rpmdbNextIterator: skipping h#    1063 Header V3 RSA/SHA1 Signature, key ID c105b9de: BAD
+ERROR with rpm_check_debug vs depsolve:
+/bin/bash is needed by uvcdat-2.2.0-1.x86_64
+/bin/sh is needed by uvcdat-2.2.0-1.x86_64
+/bin/sh is needed by uvcdat-2.2.0-1.x86_64
+/bin/sh is needed by uvcdat-2.2.0-1.x86_64
+/bin/sh is needed by uvcdat-2.2.0-1.x86_64
+/bin/sh is needed by uvcdat-2.2.0-1.x86_64
+ You could try running: rpm -Va --nofiles --nodigest
+Your transaction was saved, rerun it with:
+ yum load-transaction /tmp/yum_save_tx-2017-03-09-19-31wS9_ES.yumtx
+[01;31m[FAIL][0m 
+        Could not install or update uvcdat
+
+Checking for esgcet (publisher) 3.0.1  WARNING:(1) Could not detect version of esgcet
+
+*******************************
+Setting up ESGCET Package...(esgcet-3.0.1-py2.7.egg) [I]
+*******************************
+/usr/local/src/esgf/workbench/esg
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/lxml-3.3.5.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/lxml-3.3.5.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3467344 (3.3M) [application/x-gzip]
+Saving to: `lxml-3.3.5.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 3,467,344   --.-K/s   in 0.1s    
+
+2017-03-09 19:31:06 (34.1 MB/s) - `lxml-3.3.5.tar.gz' saved [3467344/3467344]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install lxml-3.3.5.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/requests-1.2.3.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/requests-1.2.3.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 348854 (341K) [application/x-gzip]
+Saving to: `requests-1.2.3.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 348,854     --.-K/s   in 0.01s   
+
+2017-03-09 19:31:06 (23.2 MB/s) - `requests-1.2.3.tar.gz' saved [348854/348854]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install requests-1.2.3.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/SQLAlchemy-0.7.10.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/SQLAlchemy-0.7.10.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3541639 (3.4M) [application/x-gzip]
+Saving to: `SQLAlchemy-0.7.10.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 3,541,639   --.-K/s   in 0.06s   
+
+2017-03-09 19:31:06 (54.6 MB/s) - `SQLAlchemy-0.7.10.tar.gz' saved [3541639/3541639]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install SQLAlchemy-0.7.10.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/sqlalchemy-migrate-0.6.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/sqlalchemy-migrate-0.6.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 98086 (96K) [application/x-gzip]
+Saving to: `sqlalchemy-migrate-0.6.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 98,086      --.-K/s   in 0.002s  
+
+2017-03-09 19:31:06 (53.2 MB/s) - `sqlalchemy-migrate-0.6.tar.gz' saved [98086/98086]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install sqlalchemy-migrate-0.6.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/psycopg2-2.5.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/psycopg2-2.5.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 703558 (687K) [application/x-gzip]
+Saving to: `psycopg2-2.5.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 703,558     --.-K/s   in 0.009s  
+
+2017-03-09 19:31:06 (70.7 MB/s) - `psycopg2-2.5.tar.gz' saved [703558/703558]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install psycopg2-2.5.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/Tempita-0.5.1.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/Tempita-0.5.1.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 12097 (12K) [application/x-gzip]
+Saving to: `Tempita-0.5.1.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 12,097      --.-K/s   in 0s      
+
+2017-03-09 19:31:06 (784 MB/s) - `Tempita-0.5.1.tar.gz' saved [12097/12097]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install Tempita-0.5.1.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/decorator-3.4.0.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/decorator-3.4.0.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 30333 (30K) [application/x-gzip]
+Saving to: `decorator-3.4.0.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 30,333      --.-K/s   in 0.001s  
+
+2017-03-09 19:31:06 (42.6 MB/s) - `decorator-3.4.0.tar.gz' saved [30333/30333]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install decorator-3.4.0.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/pysolr-3.3.0.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/pysolr-3.3.0.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 14075 (14K) [application/x-gzip]
+Saving to: `pysolr-3.3.0.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 14,075      --.-K/s   in 0s      
+
+2017-03-09 19:31:06 (952 MB/s) - `pysolr-3.3.0.tar.gz' saved [14075/14075]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install pysolr-3.3.0.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+wget http://esg-dn2.nsc.liu.se/esgf/dist/externals/drslib-0.3.1p3.tar.gz
+--2017-03-09 19:31:06--  http://esg-dn2.nsc.liu.se/esgf/dist/externals/drslib-0.3.1p3.tar.gz
+Resolving esg-dn2.nsc.liu.se... 130.236.100.124
+Connecting to esg-dn2.nsc.liu.se|130.236.100.124|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 712370 (696K) [application/x-gzip]
+Saving to: `drslib-0.3.1p3.tar.gz'
+
+ 0% [                                       ] 0           --.-K/s              100%[======================================>] 712,370     --.-K/s   in 0.01s   
+
+2017-03-09 19:31:06 (54.3 MB/s) - `drslib-0.3.1p3.tar.gz' saved [712370/712370]
+
+[01;32m[OK][0m
+/usr/local/uvcdat/2.2.0/bin/pip install drslib-0.3.1p3.tar.gz
+/usr/local/bin/esg-node: line 1037: /usr/local/uvcdat/2.2.0/bin/pip: No such file or directory
+Fetching the cdat project from GIT Repo...
+Initialized empty Git repository in /usr/local/src/esgf/workbench/esg/esg-publisher/.git/
+remote: Counting objects: 5161, done.[K
+remote: Compressing objects:   2% (1/38)   [Kremote: Compressing objects:   5% (2/38)   [Kremote: Compressing objects:   7% (3/38)   [Kremote: Compressing objects:  10% (4/38)   [Kremote: Compressing objects:  13% (5/38)   [Kremote: Compressing objects:  15% (6/38)   [Kremote: Compressing objects:  18% (7/38)   [Kremote: Compressing objects:  21% (8/38)   [Kremote: Compressing objects:  23% (9/38)   [Kremote: Compressing objects:  26% (10/38)   [Kremote: Compressing objects:  28% (11/38)   [Kremote: Compressing objects:  31% (12/38)   [Kremote: Compressing objects:  34% (13/38)   [Kremote: Compressing objects:  36% (14/38)   [Kremote: Compressing objects:  39% (15/38)   [Kremote: Compressing objects:  42% (16/38)   [Kremote: Compressing objects:  44% (17/38)   [Kremote: Compressing objects:  47% (18/38)   [Kremote: Compressing objects:  50% (19/38)   [Kremote: Compressing objects:  52% (20/38)   [Kremote: Compressing objects:  55% (21/38)   [Kremote: Compressing objects:  57% (22/38)   [Kremote: Compressing objects:  60% (23/38)   [Kremote: Compressing objects:  63% (24/38)   [Kremote: Compressing objects:  65% (25/38)   [Kremote: Compressing objects:  68% (26/38)   [Kremote: Compressing objects:  71% (27/38)   [Kremote: Compressing objects:  73% (28/38)   [Kremote: Compressing objects:  76% (29/38)   [Kremote: Compressing objects:  78% (30/38)   [Kremote: Compressing objects:  81% (31/38)   [Kremote: Compressing objects:  84% (32/38)   [Kremote: Compressing objects:  86% (33/38)   [Kremote: Compressing objects:  89% (34/38)   [Kremote: Compressing objects:  92% (35/38)   [Kremote: Compressing objects:  94% (36/38)   [Kremote: Compressing objects:  97% (37/38)   [Kremote: Compressing objects: 100% (38/38)   [Kremote: Compressing objects: 100% (38/38), done.[K
+Receiving objects:   0% (1/5161)   Receiving objects:   1% (52/5161)   Receiving objects:   2% (104/5161)   Receiving objects:   3% (155/5161)   Receiving objects:   4% (207/5161)   Receiving objects:   5% (259/5161)   Receiving objects:   6% (310/5161)   Receiving objects:   7% (362/5161)   Receiving objects:   8% (413/5161)   Receiving objects:   9% (465/5161)   Receiving objects:  10% (517/5161)   Receiving objects:  11% (568/5161)   Receiving objects:  12% (620/5161)   Receiving objects:  13% (671/5161)   Receiving objects:  14% (723/5161), 380.01 KiB | 670 KiB/s   Receiving objects:  14% (748/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  15% (775/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  16% (826/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  17% (878/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  18% (929/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  19% (981/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  20% (1033/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  21% (1084/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  22% (1136/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  23% (1188/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  24% (1239/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  25% (1291/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  26% (1342/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  27% (1394/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  28% (1446/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  29% (1497/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  30% (1549/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  31% (1600/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  32% (1652/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  33% (1704/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  34% (1755/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  35% (1807/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  36% (1858/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  37% (1910/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  38% (1962/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  39% (2013/5161), 1.18 MiB | 1.04 MiB/s   Receiving objects:  40% (2065/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  41% (2117/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  42% (2168/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  43% (2220/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  44% (2271/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  45% (2323/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  46% (2375/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  47% (2426/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  48% (2478/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  49% (2529/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  50% (2581/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  51% (2633/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  52% (2684/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  53% (2736/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  54% (2787/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  55% (2839/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  56% (2891/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  57% (2942/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  58% (2994/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  59% (3045/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  60% (3097/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  61% (3149/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  62% (3200/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  63% (3252/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  64% (3304/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  65% (3355/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  66% (3407/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  67% (3458/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  68% (3510/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  69% (3562/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  70% (3613/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  71% (3665/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  72% (3716/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  73% (3768/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  74% (3820/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  75% (3871/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  76% (3923/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  77% (3974/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  78% (4026/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  79% (4078/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  80% (4129/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  81% (4181/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  82% (4233/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  83% (4284/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  84% (4336/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  85% (4387/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  86% (4439/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  87% (4491/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  88% (4542/5161), 2.85 MiB | 1.67 MiB/s   Receiving objects:  88% (4586/5161), 4.07 MiB | 1.81 MiB/s   Receiving objects:  88% (4586/5161), 5.94 MiB | 1.77 MiB/s   Receiving objects:  88% (4586/5161), 7.31 MiB | 1.63 MiB/s   Receiving objects:  88% (4586/5161), 8.03 MiB | 1.60 MiB/s   Receiving objects:  89% (4594/5161), 8.03 MiB | 1.60 MiB/s   Receiving objects:  90% (4645/5161), 8.77 MiB | 1.67 MiB/s   Receiving objects:  90% (4666/5161), 9.51 MiB | 1.66 MiB/s   Receiving objects:  90% (4666/5161), 11.00 MiB | 1.38 MiB/s   Receiving objects:  90% (4668/5161), 11.74 MiB | 1.32 MiB/s   Receiving objects:  91% (4697/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects:  92% (4749/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects:  93% (4800/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects:  94% (4852/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects:  95% (4903/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects:  96% (4955/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects:  97% (5007/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects:  98% (5058/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects:  99% (5110/5161), 12.36 MiB | 1.30 MiB/s   remote: Total 5161 (delta 14), reused 0 (delta 0), pack-reused 5123[K
+Receiving objects: 100% (5161/5161), 12.36 MiB | 1.30 MiB/s   Receiving objects: 100% (5161/5161), 12.59 MiB | 1.32 MiB/s, done.
+Resolving deltas:   0% (0/2840)   Resolving deltas:   1% (51/2840)   Resolving deltas:   2% (58/2840)   Resolving deltas:   3% (88/2840)   Resolving deltas:   4% (141/2840)   Resolving deltas:   5% (142/2840)   Resolving deltas:   6% (172/2840)   Resolving deltas:   7% (206/2840)   Resolving deltas:  16% (478/2840)   Resolving deltas:  17% (486/2840)   Resolving deltas:  19% (545/2840)   Resolving deltas:  20% (571/2840)   Resolving deltas:  22% (646/2840)   Resolving deltas:  24% (693/2840)   Resolving deltas:  25% (719/2840)   Resolving deltas:  26% (746/2840)   Resolving deltas:  27% (767/2840)   Resolving deltas:  28% (800/2840)   Resolving deltas:  30% (864/2840)   Resolving deltas:  31% (901/2840)   Resolving deltas:  32% (909/2840)   Resolving deltas:  33% (942/2840)   Resolving deltas:  35% (994/2840)   Resolving deltas:  37% (1072/2840)   Resolving deltas:  38% (1091/2840)   Resolving deltas:  39% (1108/2840)   Resolving deltas:  40% (1163/2840)   Resolving deltas:  41% (1165/2840)   Resolving deltas:  42% (1214/2840)   Resolving deltas:  43% (1233/2840)   Resolving deltas:  45% (1284/2840)   Resolving deltas:  46% (1308/2840)   Resolving deltas:  47% (1338/2840)   Resolving deltas:  48% (1369/2840)   Resolving deltas:  49% (1403/2840)   Resolving deltas:  50% (1421/2840)   Resolving deltas:  51% (1460/2840)   Resolving deltas:  52% (1492/2840)   Resolving deltas:  55% (1584/2840)   Resolving deltas:  72% (2056/2840)   Resolving deltas:  74% (2116/2840)   Resolving deltas:  78% (2217/2840)   Resolving deltas:  79% (2244/2840)   Resolving deltas:  81% (2314/2840)   Resolving deltas:  83% (2362/2840)   Resolving deltas:  84% (2400/2840)   Resolving deltas:  85% (2419/2840)   Resolving deltas:  86% (2443/2840)   Resolving deltas:  89% (2538/2840)   Resolving deltas:  90% (2571/2840)   Resolving deltas:  91% (2603/2840)   Resolving deltas:  92% (2622/2840)   Resolving deltas:  94% (2679/2840)   Resolving deltas:  95% (2716/2840)   Resolving deltas:  96% (2751/2840)   Resolving deltas:  97% (2760/2840)   Resolving deltas:  98% (2785/2840)   Resolving deltas:  99% (2825/2840)   Resolving deltas: 100% (2840/2840)   Resolving deltas: 100% (2840/2840), done.
+Already up-to-date.
+Note: checking out 'v3.0.1'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b new_branch_name
+
+HEAD is now at 3da77d7... release description, new version number
+/usr/local/bin/esg-node: line 1069: /usr/local/uvcdat/2.2.0/bin/python: No such file or directory
+
+Sorry...
+This action did not complete successfully
+Please re-run this task until successful before continuing further
+
+Also please review the installation FAQ it may assist you
+https://github.com/ESGF/esgf.github.io/wiki/ESGFNode%7CFAQ
+
+
+Script done on Thu 09 Mar 2017 07:31:16 PM CET
